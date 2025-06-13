@@ -61,7 +61,7 @@ export interface MarketData {
   recentAverages: RecentAverages;
   priceSpikes: PriceSpike[];
   backtestResult: BacktestResult;
-  narrativeInsights: string;
+  narrativeInsights?: string; // Made optional
 }
 
 export interface ChartDataPoint {

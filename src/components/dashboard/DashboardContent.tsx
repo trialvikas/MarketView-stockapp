@@ -136,12 +136,14 @@ export function DashboardContent({ data }: DashboardContentProps) {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-3">
+        <div className={narrativeInsights ? "lg:col-span-3" : "lg:col-span-5"}>
             <TradesTable trades={backtestResult.trades} />
         </div>
-        <div className="lg:col-span-2">
-            <NarrativeCard insights={narrativeInsights} />
-        </div>
+        {narrativeInsights && (
+          <div className="lg:col-span-2">
+              <NarrativeCard insights={narrativeInsights} />
+          </div>
+        )}
       </div>
 
       {/* Cumulative Profit Chart - New Row */}
