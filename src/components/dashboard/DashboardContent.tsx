@@ -3,8 +3,9 @@ import type { MarketData, ChartDataPoint } from '@/lib/types';
 import { MainChart } from './MainChart';
 import { StatCard } from './StatCard';
 import { TradesTable } from './TradesTable';
-import { NarrativeCard } from './NarrativeCard';
-import { CumulativeProfitChart } from './CumulativeProfitChart'; // Import new chart
+import { NarrativeCard } from './NarrativeCard'; // Kept for future re-enablement if needed
+import { StrategyDescriptionCard } from './StrategyDescriptionCard'; // New component
+import { CumulativeProfitChart } from './CumulativeProfitChart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { TrendingUp, TrendingDown, Percent, BarChartBig, Clock, HelpCircle, Sigma, ListTree, AlertTriangle } from 'lucide-react';
@@ -46,11 +47,10 @@ export function DashboardContent({ data }: DashboardContentProps) {
     vwma20: indicators.vwma20[index],
     ema50: indicators.ema50[index],
     ema200: indicators.ema200[index],
-    hasSpike: false, // Initialize
-    spikeDescriptions: [], // Initialize
+    hasSpike: false, 
+    spikeDescriptions: [], 
   }));
 
-  // Add trade markers to chartData
   backtestResult.trades.forEach(trade => {
     const entryIndex = chartData.findIndex(d => d.date === trade.entryDate);
     if (entryIndex !== -1) {
@@ -64,7 +64,6 @@ export function DashboardContent({ data }: DashboardContentProps) {
     }
   });
 
-  // Add spike information to chartData
   priceSpikes.forEach(spike => {
     const chartIndex = chartData.findIndex(d => d.date === spike.date);
     if (chartIndex !== -1) {
@@ -77,12 +76,10 @@ export function DashboardContent({ data }: DashboardContentProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Chart - takes 2/3 width on large screens */}
         <div className="lg:col-span-2">
           <MainChart data={chartData} symbol={symbol} />
         </div>
 
-        {/* Sidebar with Stats - takes 1/3 width */}
         <div className="space-y-6">
           <Card className="shadow-lg">
              <CardHeader>
@@ -128,17 +125,27 @@ export function DashboardContent({ data }: DashboardContentProps) {
         </div>
       </div>
 
-      {/* Backtest Results and Narrative Insights - Full Width Below */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard title="Total P/L" value={backtestResult.profitLoss} icon={<TrendingUp />} className="md:col-span-1" />
         <StatCard title="Win Rate" value={backtestResult.winRate} unit="%" icon={<Percent />} className="md:col-span-1" />
         <StatCard title="Avg. Trade Length" value={backtestResult.averageTradeLength.toFixed(1)} unit="days" icon={<Clock />} className="md:col-span-1" />
       </div>
+
+      {/* Strategy Description Card - New Row */}
+      <div className="grid grid-cols-1 gap-6">
+        <StrategyDescriptionCard />
+      </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <div className={narrativeInsights ? "lg:col-span-3" : "lg:col-span-5"}>
+        {/* Adjusted lg:col-span-5 as narrativeInsights is currently disabled */}
+        <div className="lg:col-span-5"> 
             <TradesTable trades={backtestResult.trades} />
         </div>
+        {/* 
+          The NarrativeCard section is conditionally rendered based on narrativeInsights.
+          If AI insights are re-enabled, this section will reappear.
+          The column span for TradesTable would then need to be adjusted back, e.g., lg:col-span-3.
+        */}
         {narrativeInsights && (
           <div className="lg:col-span-2">
               <NarrativeCard insights={narrativeInsights} />
@@ -146,7 +153,6 @@ export function DashboardContent({ data }: DashboardContentProps) {
         )}
       </div>
 
-      {/* Cumulative Profit Chart - New Row */}
       <div className="grid grid-cols-1 gap-6">
         <CumulativeProfitChart trades={backtestResult.trades} />
       </div>
