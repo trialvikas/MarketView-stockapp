@@ -1,8 +1,10 @@
-import type { MarketData, ChartDataPoint, HistoricalData } from '@/lib/types';
+
+import type { MarketData, ChartDataPoint } from '@/lib/types';
 import { MainChart } from './MainChart';
 import { StatCard } from './StatCard';
 import { TradesTable } from './TradesTable';
 import { NarrativeCard } from './NarrativeCard';
+import { CumulativeProfitChart } from './CumulativeProfitChart'; // Import new chart
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { TrendingUp, TrendingDown, Percent, BarChartBig, Clock, HelpCircle, Sigma, ListTree, AlertTriangle } from 'lucide-react';
@@ -44,6 +46,8 @@ export function DashboardContent({ data }: DashboardContentProps) {
     vwma20: indicators.vwma20[index],
     ema50: indicators.ema50[index],
     ema200: indicators.ema200[index],
+    hasSpike: false, // Initialize
+    spikeDescriptions: [], // Initialize
   }));
 
   // Add trade markers to chartData
@@ -57,6 +61,15 @@ export function DashboardContent({ data }: DashboardContentProps) {
       if (exitIndex !== -1) {
         chartData[exitIndex].trade = 'sell';
       }
+    }
+  });
+
+  // Add spike information to chartData
+  priceSpikes.forEach(spike => {
+    const chartIndex = chartData.findIndex(d => d.date === spike.date);
+    if (chartIndex !== -1) {
+      chartData[chartIndex].hasSpike = true;
+      chartData[chartIndex].spikeDescriptions!.push(spike.description);
     }
   });
 
@@ -129,6 +142,11 @@ export function DashboardContent({ data }: DashboardContentProps) {
         <div className="lg:col-span-2">
             <NarrativeCard insights={narrativeInsights} />
         </div>
+      </div>
+
+      {/* Cumulative Profit Chart - New Row */}
+      <div className="grid grid-cols-1 gap-6">
+        <CumulativeProfitChart trades={backtestResult.trades} />
       </div>
     </div>
   );

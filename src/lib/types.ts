@@ -1,3 +1,4 @@
+
 export interface HistoricalData {
   date: Date;
   open: number;
@@ -22,8 +23,11 @@ export interface RecentAverages {
 }
 
 export interface PriceSpike {
-  date: string;
+  date: string; // YYYY-MM-DD
   description: string;
+  // Future enhancement: type: 'volume' | 'price_increase' | 'price_decrease';
+  // Future enhancement: rawValue?: number;
+  // Future enhancement: avgValue?: number;
 }
 
 export interface Trade {
@@ -72,4 +76,6 @@ export interface ChartDataPoint {
   ema200?: number;
   rsi?: number; // For potential RSI chart
   trade?: 'buy' | 'sell'; // Mark trades
+  hasSpike?: boolean;
+  spikeDescriptions?: string[];
 }
