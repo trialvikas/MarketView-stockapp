@@ -362,4 +362,5 @@ export {
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
+  useChart, // Added useChart to exports
 }
