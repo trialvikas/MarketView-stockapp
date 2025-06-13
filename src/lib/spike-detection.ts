@@ -1,4 +1,4 @@
-'use server';
+
 import type { HistoricalData, PriceSpike } from '@/lib/types';
 
 const SIGNIFICANT_CHANGE_THRESHOLD = 2; // e.g., 2 times the average
@@ -18,11 +18,13 @@ export function detectSpikes(
   // Calculate average volume and price change over the lookback period (excluding the scan period)
   const avgCalculationData = recentData.slice(0, lookbackPeriodsForAverage);
   const volumes = avgCalculationData.map(d => d.volume);
-  const avgVolume = volumes.reduce((sum, v) => sum + v, 0) / volumes.length;
+  const avgVolume = volumes.length > 0 ? volumes.reduce((sum, v) => sum + v, 0) / volumes.length : 0;
 
   const priceChanges: number[] = [];
   for (let i = 1; i < avgCalculationData.length; i++) {
-    priceChanges.push(Math.abs(avgCalculationData[i].close - avgCalculationData[i-1].close) / avgCalculationData[i-1].close);
+    if (avgCalculationData[i-1].close > 0) { // Avoid division by zero
+      priceChanges.push(Math.abs(avgCalculationData[i].close - avgCalculationData[i-1].close) / avgCalculationData[i-1].close);
+    }
   }
   const avgPriceChangePercent = priceChanges.length > 0 ? priceChanges.reduce((sum, pc) => sum + pc, 0) / priceChanges.length : 0;
 
@@ -44,7 +46,7 @@ export function detectSpikes(
     // Price spike (based on daily change)
     if (i > 0 || historicalData.length > periodsToScan) { // Need previous day for price change
         const prevData = (i > 0) ? dataToScan[i-1] : historicalData[historicalData.length - periodsToScan - 1];
-        if (prevData.close > 0) {
+        if (prevData.close > 0) { // Avoid division by zero
             const priceChangePercent = Math.abs(currentData.close - prevData.close) / prevData.close;
             if (priceChangePercent > avgPriceChangePercent * SIGNIFICANT_CHANGE_THRESHOLD && avgPriceChangePercent > 0) {
                  spikes.push({

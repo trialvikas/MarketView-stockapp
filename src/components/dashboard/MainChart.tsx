@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis, ReferenceLine, ReferenceDot, TooltipProps } from 'recharts';
 import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent';
-import { format }rsc/app/page.tsx from 'date-fns';
+import { format } from 'date-fns';
 
 type MainChartProps = {
   data: ChartDataPoint[];

@@ -1,4 +1,4 @@
-'use server';
+
 import type { HistoricalData } from '@/lib/types';
 
 // SMA (Simple Moving Average) - Helper for RSI and MACD

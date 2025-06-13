@@ -1,4 +1,4 @@
-'use server';
+
 import type { HistoricalData, Trade, BacktestResult } from '@/lib/types';
 
 export function runBacktest(
