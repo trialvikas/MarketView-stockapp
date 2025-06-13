@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useTransition } from 'react';
@@ -11,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
-  symbol: z.string().min(1, "Symbol is required").max(10, "Symbol too long").transform(value => value.toUpperCase()),
+  symbol: z.string().min(1, "Symbol is required").max(20, "Symbol too long").transform(value => value.toUpperCase()),
 });
 
 type StockInputFormProps = {
